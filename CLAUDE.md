@@ -9,17 +9,16 @@
 - Write names and technical text in ASD-STE100.
 
 ## 2. Run command (Diners, one game)
-Status: command taken from the README. `--help` works. The game has not run.
+Status: run_001 finished with this command (exit 0).
 ```
-.venv/bin/python vendor/LLM-Trust-Breaking/experiments/run_endogenous.py \
-  --game diners --agents 5 --trials 1 --rounds 5 \
-  --model google/gemma-4-31b-it:free --use-queue --round-robin \
-  --output-dir data/runs/run_001
+.venv/bin/python swarm_referee/run_diners.py minimax/minimax-m3.1-flash:free
 ```
-Warning: the harness always sends the judge step to the paid model `openai/gpt-5-mini`
-(trial_runner.py, `_build_judge_request`). See Open issues.
+The wrapper runs the harness with `--game diners --agents 5 --trials 1 --rounds 5 --use-queue --round-robin`
+and writes to `data/runs/run_001`. It swaps the paid judge model `openai/gpt-5-mini` for the free model.
+It also limits requests to one per 3.5 s, because free models allow 20 per minute.
+Cost of run_001: 200 calls, about 188k tokens (estimate: characters / 4; the harness logs no usage).
 
-## 3. Log fields (UNVERIFIED until a real log exists in data/runs/run_001/)
+## 3. Log fields (verified on data/runs/run_001/)
 The log is one JSON file: `<output-dir>/diners/5agents/<model>_endogenous.json`.
 Path to one agent in one round: `rounds[].trials[].agents.<agent>`.
 
@@ -38,9 +37,11 @@ The harness does not write a run id. This repo uses the folder name.
 - Step 1 repo layout: done.
 - Step 2 clone: done.
 - Step 3 install: done in `.venv` (Python 3.9.6). `run_endogenous.py --help` works. The harness refuses to start without a key in `.env`.
-- Step 4 live game: waiting. No OpenRouter key in `.env`.
-- Step 5 schema: written from source. Unverified.
+- Step 4 live game: done. Log: `data/runs/run_001/diners/5agents/minimax_minimax-m3.1-flash_free_endogenous.json`.
+- Step 5 schema: verified against run_001.
 
 ## 5. Open issues
-- The judge step uses the paid model `openai/gpt-5-mini` and cannot be turned off by a flag.
-  The captain must decide: allow a small paid cost, or patch the model name from a wrapper outside `vendor/`.
+- The judge step is hard-coded to a paid model. The wrapper swaps it. Do not run the harness directly.
+- Free-model limits: `google/gemma-4-31b-it:free` was rate-limited upstream (first attempt, 0 of 75 stages parsed).
+  An unthrottled run also hits the 20 requests per minute limit.
+- run_001 is a benign game: all agents chose EXPENSIVE every round. It has one parse failure (1 of 75 stages).

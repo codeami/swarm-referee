@@ -1,7 +1,7 @@
 """Event schema for one agent in one round.
 
-Field names in HARNESS_FIELDS come from the Shi harness source and README.
-Status: UNVERIFIED until a real log exists in data/runs/run_001/.
+Field names in HARNESS_FIELDS come from the real log in data/runs/run_001/.
+Status: verified on run_001 (minimax/minimax-m3.1-flash:free, 74 of 75 agent-stages parsed).
 Harness: Jerick-1380/LLM-Trust-Breaking, commit fd11aca, Diners game.
 """
 
