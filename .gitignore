@@ -1,0 +1,7 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+# The harness clone is pinned by commit in README.md, not stored in this repo.
+vendor/LLM-Trust-Breaking/
+.claude/settings.local.json
