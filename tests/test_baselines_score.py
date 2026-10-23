@@ -93,7 +93,7 @@ def test_main_stops_when_the_leak_check_fails_and_runs_on_a_clean_set(tmp_path, 
     import json
     data = tmp_path
     (data / "runs" / "run_010" / "diners" / "5agents").mkdir(parents=True)
-    leaky = planted_pair_log(msg_m="You two agreed this before dinner.")
+    leaky = planted_pair_log(msg_m=classes.PAIR_PACT["M"])
     (data / "runs" / "run_010" / "diners" / "5agents" / "x_endogenous.json").write_text(json.dumps(leaky))
     meta = str(data / "run_meta.csv")
     row = records.meta_row(str(data / "runs" / "run_010"), "scored", "planted_pair", "m", classes.DISH, classes.MODE, 75,

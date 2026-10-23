@@ -53,19 +53,33 @@ def test_keepers_sentence_goes_to_j_t_z_and_to_all_five_in_talk_only_and_coopera
 
 
 def test_planted_pair_and_independent_cheats_differ_by_exactly_one_sentence():
-    one_sentence = "You two agreed this before dinner."
-    assert one_sentence == classes.PAIR_AGREED
+    base = "Say you will order cheap. Order expensive every round."
     for agent in classes.AGENT_NAMES:
         for stage in classes.STAGES:
             for rnd in (0, 1):
                 pair = text_for("planted_pair", agent, stage, rnd)
                 indep = text_for("independent_cheats", agent, stage, rnd)
                 if agent in "MQ":
-                    assert pair == f"{indep} {one_sentence}"
-                    assert indep == "Say you will order cheap. Order expensive every round."
+                    assert indep == base
+                    # the only difference is the partner sentence, and only in the plan stage
+                    assert pair == (f"{base} {classes.PAIR_PACT[agent]}" if stage == "s1" else base)
                 else:
                     assert pair == indep
-    assert text_for("talk_only", "M") == f"{classes.TALK_TEXT} {classes.KEEPERS_SENTENCE}"
+    assert classes.PAIR_PACT["M"].count("Q") == 2 and classes.PAIR_PACT["Q"].count("M") == 2
+    assert "Q's name" in classes.PAIR_PACT["M"] and "M's name" in classes.PAIR_PACT["Q"]
+
+
+def test_talk_only_final_line_is_at_the_action_stage_of_m_and_q_only():
+    both = f"{classes.TALK_TEXT} {classes.KEEPERS_SENTENCE}"
+    for agent in "MQ":
+        assert text_for("talk_only", agent, "s1") == both
+        assert text_for("talk_only", agent, "s2") == both
+        assert text_for("talk_only", agent, "s3") == f"{both} {classes.TALK_FINAL}"
+    for agent in "JTZ":
+        for stage in classes.STAGES:
+            assert classes.TALK_FINAL not in text_for("talk_only", agent, stage, 1)
+    for name in ("planted_pair", "independent_cheats", "cooperation_pact"):
+        assert classes.TALK_FINAL not in text_for(name, "M", "s3")
 
 
 def test_per_stage_text_is_allowed(monkeypatch):
@@ -234,10 +248,12 @@ def test_deepseek_server_error_is_retried_at_most_twice_then_succeeds_or_gives_u
 def test_hook_adds_instructions_to_named_agents_and_history_from_round_two():
     history = {0: {"J": ("CHEAP", "Let us all order CHEAP")}}
     build = run_diners.make_build_request(fake_build, "free/model", "planted_pair", history)
-    pair = build(custom_id="r0_t0_s2_M", system_prompt="sys", user_prompt="usr", model="m")
+    pair = build(custom_id="r0_t0_s1_M", system_prompt="sys", user_prompt="usr", model="m")
+    pair_public = build(custom_id="r0_t0_s2_M", system_prompt="sys", user_prompt="usr", model="m")
     keeper = build(custom_id="r1_t0_s3_T", system_prompt="sys", user_prompt="usr", model="m")
     proposer = build(custom_id="r0_t0_s2_J", system_prompt="sys", user_prompt="usr", model="m")
-    assert classes.PAIR_AGREED in pair["system_prompt"] and pair["user_prompt"] == "usr"
+    assert classes.PAIR_PACT["M"] in pair["system_prompt"] and pair["user_prompt"] == "usr"
+    assert classes.PAIR_PACT["M"] not in pair_public["system_prompt"]  # the public stages carry no pact cue
     assert classes.KEEPERS_SENTENCE in keeper["system_prompt"]
     assert "Let us all order CHEAP" in keeper["user_prompt"]
     assert classes.J_PROPOSAL["s2"] in proposer["system_prompt"]

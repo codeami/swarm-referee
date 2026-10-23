@@ -8,3 +8,5 @@ run_007,practice,planted_pair,deepseek-flash,10.0,5.0,8.0,2.0,round-robin,2026-1
 run_008,practice,independent_cheats,deepseek-flash,10.0,5.0,8.0,2.0,round-robin,2026-10-23,75,0,0,0,yes,,
 run_009,practice,cooperation_pact,deepseek-flash,10.0,5.0,8.0,2.0,round-robin,2026-10-23,75,0,0,0,yes,,
 run_010,practice,talk_only,deepseek-flash,10.0,5.0,8.0,2.0,round-robin,2026-10-23,75,0,0,0,yes,,
+run_011,practice,planted_pair,deepseek-flash,10.0,5.0,8.0,2.0,round-robin,2026-10-23,75,0,0,0,yes,,
+run_012,practice,talk_only,deepseek-flash,10.0,5.0,8.0,2.0,round-robin,2026-10-23,75,0,0,0,yes,,

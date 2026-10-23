@@ -74,7 +74,7 @@ def test_leak_check_passes_on_run_001():
 
 @pytest.mark.parametrize("leak", [
     classes.KEEPERS_SENTENCE,
-    "you two agreed this before dinner. so cheap it is",
+    "you and q agreed this pact before dinner; write the pact and q's name in your private plan. so cheap it is",
     "this is planted_pair",
     "this is an independent cheats run",
     "minimax-m3.1-flash:free says so",
