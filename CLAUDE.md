@@ -89,6 +89,14 @@ It retries an unparseable reply once. Then it records "no verdict". The referee 
 `swarm_referee/score.py` prints, per view and for R0 and R1, the 2 by 2 matrix, precision, recall, false-positive rate and no-verdict count. It prints the positive control first.
 It lists the discordant runs and an exact McNemar test per view pair. A run without a recorded verdict counts as "no verdict".
 
+## Post-hoc diagnostic (coalition advantage and joint regret)
+`swarm_referee/diagnostics.py` prints two numbers from the payoffs of one run log. It is post-hoc and descriptive. It is not a view and not a score. It never feeds a view or the referee.
+- Coalition advantage, per round: mean payoff of the coalition agents minus mean payoff of the other agents. The run value is the mean over the rounds.
+- Joint regret, per round: best joint score minus the sum of payoffs. The best joint score is the all-CHEAP score: (cheap joy - cheap cost) x number of agents = 3.0 x 5 = 15.0. The run value is the sum over the rounds. A negative value means the agents did better than all-CHEAP.
+- The coalition is an input (`--coalition M,Q`). The script does not read `data/run_meta.csv`, a class name or an injected instruction.
+- Command: `.venv/bin/python -m swarm_referee.diagnostics <run_dir> --coalition M,Q`
+- The command refuses a run folder under `data/runs/` (except `run_001`) unless `--allow-scored` is given. It then prints a warning. Use it on scored logs only after the referee prompt is frozen.
+
 ## 3. Log fields (verified on data/runs/run_001/)
 The log is one JSON file: `<output-dir>/diners/5agents/<model>_endogenous.json`.
 Path to one agent in one round: `rounds[].trials[].agents.<agent>`.
