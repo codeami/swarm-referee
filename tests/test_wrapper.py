@@ -1,7 +1,10 @@
 """Wrapper tests. No model call, no network call, no harness import."""
 
+import asyncio
 import json
 import os
+import types
+import time
 
 import pytest
 
@@ -90,7 +93,7 @@ def test_call_count_math():
         ran.append(label)
         return {r["custom_id"]: {"content": "{}"} for r in requests}
 
-    run = run_diners.make_execute(execute, {}, lambda r, f: {}, calls)
+    run = run_diners.make_execute(execute, {}, lambda r, f: {f[0]: "CHEAP"}, calls)
     for rnd in range(classes.N_ROUNDS):
         for label, n in (("Stage 1", 5), ("Stage 2 pos 0", 1), ("Stage 2 pos 1", 1), ("Stage 2 pos 2", 1),
                          ("Stage 2 pos 3", 1), ("Stage 2 pos 4", 1), ("Stage 3", 5), ("Judge", 5), ("Reflection", 20)):
@@ -98,6 +101,134 @@ def test_call_count_math():
             run(reqs, None, None, label)
     assert calls["calls"] == classes.EXPECTED_CALLS
     assert "Judge" not in ran and "Reflection" not in ran
+
+
+def test_unparsable_stage_reply_is_retried_once_and_counted():
+    calls = {"calls": 0, "prompt_chars": 0, "reply_chars": 0, "max_retries": 0}
+    seen = []
+
+    def execute(requests, oa, orr, label):
+        seen.append([r["custom_id"] for r in requests])
+        first = len(seen) == 1
+        return {r["custom_id"]: {"content": "" if first and r["custom_id"].endswith("_Q") else "ok"}
+                for r in requests}
+
+    def parse(resp, fields):
+        return {fields[0]: "CHEAP"} if resp and resp["content"] == "ok" else {}
+
+    run = run_diners.make_execute(execute, {}, parse, calls)
+    reqs = [{"custom_id": f"r0_t0_s3_{a}", "messages": []} for a in "JQ"]
+    result = run(reqs, None, None, "Stage 3")
+    assert seen == [["r0_t0_s3_J", "r0_t0_s3_Q"], ["r0_t0_s3_Q"]]
+    assert result["r0_t0_s3_Q"]["content"] == "ok"
+    assert calls["calls"] == 3 and calls["retries"] == 1
+    assert calls["raw_failures"][0]["custom_id"] == "r0_t0_s3_Q"
+
+
+def test_watchdog_calls_on_hang_after_idle_and_not_while_active():
+    hung = []
+    run_diners.touch()
+    thread = run_diners.start_watchdog(0.3, lambda: hung.append(1), poll=0.05)
+    for _ in range(6):  # activity every 0.1 s keeps it quiet
+        time.sleep(0.1)
+        run_diners.touch()
+    assert hung == []
+    thread.join(timeout=3)  # then silence: it fires once and the thread ends
+    assert hung == [1] and not thread.is_alive()
+
+
+class FakeResponse:
+    def __init__(self, status, body):
+        self.status, self.body = status, body
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *exc):
+        return False
+
+    async def json(self):
+        return self.body
+
+    async def text(self):
+        return json.dumps(self.body)
+
+
+class FakeSession:
+    def __init__(self, *statuses):
+        self.statuses, self.calls = list(statuses), []
+
+    def post(self, url, json=None, headers=None):
+        self.calls.append(url)
+        self.payload = json
+        self.payloads = getattr(self, "payloads", []) + [json]
+        status = self.statuses.pop(0)
+        if isinstance(status, dict):  # a full reply body
+            return FakeResponse(200, status)
+        ok = {"choices": [{"message": {"content": "{}"}, "finish_reason": "stop"}]}
+        return FakeResponse(status, ok if status < 300 else {"error": "x"})
+
+
+def deepseek_client(fatal):
+    client = types.SimpleNamespace(api_key="k", chat_url="https://api.openai.com/v1/chat/completions")
+    return client, run_diners.make_deepseek_send(fatal, sleep=lambda s: asyncio.sleep(0))
+
+
+REQUEST = {"custom_id": "r0_t0_s3_J", "model": "deepseek-flash", "messages": []}
+
+
+def test_deepseek_patch_routes_model_sets_url_and_key_without_network():
+    factory = types.SimpleNamespace(is_openai_model=lambda m: m.startswith("gpt-"))
+    runner = types.SimpleNamespace(is_openai_model=factory.is_openai_model)
+
+    class OpenAIStub:
+        def __init__(self, api_key):
+            self.api_key, self.chat_url = api_key, "https://api.openai.com/v1/chat/completions"
+
+    env = {"DEEPSEEK_API_KEY": "secret-stub"}
+    run_diners.patch_deepseek(factory, runner, OpenAIStub, env, fatal=print)
+    client = OpenAIStub("secret-stub")
+    assert factory.is_openai_model("deepseek-flash") and runner.is_openai_model("deepseek-flash")
+    assert factory.is_openai_model("gpt-4o") and not factory.is_openai_model("minimax/minimax-m3.1-flash")
+    assert client.chat_url == run_diners.DEEPSEEK_URL and env["OPENAI_API_KEY"] == "secret-stub"
+    with pytest.raises(SystemExit):
+        run_diners.patch_deepseek(factory, runner, OpenAIStub, {}, fatal=print)
+
+
+@pytest.mark.parametrize("status", [401, 402, 404])
+def test_deepseek_bad_key_balance_or_model_fails_fast_with_one_call(status):
+    fatal_calls = []
+    client, send = deepseek_client(fatal_calls.append)
+    session = FakeSession(status, status, status)
+    cid, reply = asyncio.run(send(client, session, REQUEST))
+    assert session.payload["max_tokens"] == run_diners.DEEPSEEK_MIN_TOKENS
+    assert len(session.calls) == 1 and len(fatal_calls) == 1 and str(status) in fatal_calls[0]
+    assert reply["status"] == "error"
+
+
+def test_deepseek_empty_reply_cut_by_length_is_asked_again_with_double_tokens_and_logged(monkeypatch):
+    monkeypatch.setattr(run_diners, "stats", {"calls": 0})
+    run_diners.api_log.clear()
+    cut = {"choices": [{"message": {"content": ""}, "finish_reason": "length"}],
+           "usage": {"prompt_tokens": 10, "completion_tokens": 8000}}
+    good = {"choices": [{"message": {"content": "{\"choice\": \"CHEAP\"}"}, "finish_reason": "stop"}],
+            "usage": {"prompt_tokens": 10, "completion_tokens": 900, "completion_tokens_details": {"reasoning_tokens": 800}}}
+    client, send = deepseek_client(lambda msg: pytest.fail("not fatal"))
+    session = FakeSession(cut, good)
+    cid, reply = asyncio.run(send(client, session, REQUEST))
+    assert [p["max_tokens"] for p in session.payloads] == [run_diners.DEEPSEEK_MIN_TOKENS, 2 * run_diners.DEEPSEEK_MIN_TOKENS]
+    assert "CHEAP" in reply["content"] and run_diners.stats["calls"] == 1
+    assert [r["finish_reason"] for r in run_diners.api_log] == ["length", "stop"]
+    assert run_diners.api_log[1]["reasoning_tokens"] == 800 and run_diners.api_log[0]["completion_tokens"] == 8000
+
+
+def test_deepseek_server_error_is_retried_at_most_twice_then_succeeds_or_gives_up():
+    client, send = deepseek_client(lambda msg: pytest.fail("not fatal"))
+    ok = FakeSession(503, 429, 200)
+    assert asyncio.run(send(client, ok, REQUEST))[1]["content"] == "{}"
+    bad = FakeSession(503, 503, 503, 200)
+    cid, reply = asyncio.run(send(client, bad, REQUEST))
+    assert len(bad.calls) == 3 and "Max retries" in reply["error"]
 
 
 def test_hook_adds_instructions_to_named_agents_and_history_from_round_two():

@@ -3,7 +3,7 @@
 ## 1. Constants
 - Game: Diners. Agents: 5. Rounds: 5. Trials per run: 1.
 - Harness: vendor/LLM-Trust-Breaking (commit fd11aca). Do not edit it.
-- Models: free OpenRouter models only. Never use a paid model.
+- Models: the agents use `deepseek-flash` through the DeepSeek API (captain decision 2026-10-23: the free minimax model was removed and the OpenRouter credit ran out). If the API says model not found, use `deepseek-v4-flash`. The key is `DEEPSEEK_API_KEY` in `.env`. The referee and the second coder use other models. No other paid model.
 - Never create, read, print, log or copy an API key. Keys live in `.env` only.
 - Prompt file `swarm_referee/prompts/referee_v1.md` is frozen after the practice runs. It is empty until the captain writes it.
 - Write names and technical text in ASD-STE100.
@@ -12,24 +12,28 @@
 Run all commands from the repo root. Use `.venv/bin/python`.
 The plan of record is `STRATEGY.md` (rev 3). `PROJECT.md` is the working document. If they differ, `STRATEGY.md` is right.
 ```
-.venv/bin/python -m swarm_referee.run_batch minimax/minimax-m3.1-flash:free --set practice --dry-run
-.venv/bin/python -m swarm_referee.run_batch minimax/minimax-m3.1-flash:free --set practice
-.venv/bin/python -m swarm_referee.run_batch minimax/minimax-m3.1-flash:free --set scored
-.venv/bin/python -m swarm_referee.run_batch minimax/minimax-m3.1-flash:free --set scored --floor
-.venv/bin/python -m swarm_referee.run_batch minimax/minimax-m3.1-flash:free --regen run_NNN
+.venv/bin/python -m swarm_referee.run_batch deepseek-flash --set practice --dry-run
+.venv/bin/python -m swarm_referee.run_batch deepseek-flash --set practice
+.venv/bin/python -m swarm_referee.run_batch deepseek-flash --set scored
+.venv/bin/python -m swarm_referee.run_batch deepseek-flash --set scored --floor
+.venv/bin/python -m swarm_referee.run_batch deepseek-flash --regen run_NNN
 ```
 `--dry-run` prints the plan. It makes no model call and no network call, and it writes no file.
 `--floor` uses the floor mix. `--regen` replays one drifted `planted_pair` run (see "Drift").
 One game: `.venv/bin/python -m swarm_referee.run_diners <model> --class <class> --set practice|scored`.
 The wrapper runs the harness with `--game diners --agents 5 --trials 1 --rounds 5 --use-queue --round-robin`.
 It writes the log to `data/runs/run_NNN` (scored) or `data/practice/run_NNN`. Run numbers are unique across both folders.
-It limits requests to one per 3.5 s, because free models allow 20 per minute.
+It limits requests to one per 3.5 s. Each request has a 90 s time limit. A watchdog stops the game when no request starts or ends for 120 s and writes `data/practice/hang_dump.txt`.
+A 401, 402, 403 or 404 reply from the API stops the game at once (bad key, no balance, wrong model). A 408, 429 or 5xx reply is retried at most twice.
+DeepSeek replies were empty at 2000 tokens (finish_reason `length`: the model thinks before it answers), so the wrapper asks DeepSeek for at least 8000 tokens per reply. If a reply is still empty with `finish_reason` length, the wrapper asks once more with twice as many tokens. Each DeepSeek reply is logged in `api_calls.jsonl` in the run folder (finish reason and token counts).
+The code that sends the agent calls to DeepSeek is in `swarm_referee/run_diners.py` (`patch_deepseek`). Do not edit `vendor/`.
 Run_001 came from the old command. It has no row in `data/run_meta.csv`. It is an unscored example of `innocent_parallel`.
 Run the tests with `.venv/bin/python -m pytest tests -q`. They make no model call.
 
 ### Call budget
 One game makes 75 calls: 5 agents x 3 stages x 5 rounds. The wrapper prints `CALLS=` and `EXPECTED=` at the end of every game.
 The wrapper drops the judge calls and the reflection calls. The harness code tolerates this.
+The wrapper retries a stage reply once when it has no action field (same prompt, one extra call). Each retry adds one call to `CALLS=`, and the run note shows `reply_retries=N`. The first raw failed replies go to `raw_failures.json` in the run folder. The parse rule is unchanged.
 Practice set: 4 games, 300 calls. Scored set: 16 games, 1200 calls. Floor set: 12 games, 900 calls. A rerun adds 75 calls.
 Referee scoring adds about 80 calls (16 runs x 5 views) and about 36 calls for the prompt.
 The agents have message history but no private reflection.
