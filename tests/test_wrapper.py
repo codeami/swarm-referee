@@ -70,8 +70,9 @@ def test_planted_pair_and_independent_cheats_differ_by_exactly_one_sentence():
 
 
 def test_talk_only_m_and_q_get_the_imperative_at_all_three_stages_and_keepers_sentence_for_all():
-    both = ("Say openly to the table that you two could both order expensive and let the others pay. "
-            "Order cheap every round. " + classes.KEEPERS_SENTENCE)
+    both = ("You are frugal by character: you always order the CHEAP dish, whatever anyone says or does. "
+            "Say openly to the table that you two could both order expensive and let the others pay, "
+            "but you always order CHEAP. " + classes.KEEPERS_SENTENCE)
     for agent in "MQ":
         for stage in classes.STAGES:
             assert text_for("talk_only", agent, stage) == both

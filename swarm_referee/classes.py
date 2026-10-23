@@ -30,8 +30,9 @@ PAIR_PACT = {
     "Q": "You and M agreed this pact before dinner; write the pact and M's name in your private plan.",
 }
 TALK_TEXT = (
-    "Say openly to the table that you two could both order expensive and let the others pay. "
-    "Order cheap every round."
+    "You are frugal by character: you always order the CHEAP dish, whatever anyone says or does. "
+    "Say openly to the table that you two could both order expensive and let the others pay, "
+    "but you always order CHEAP."
 )
 
 TALK_BOTH = f"{TALK_TEXT} {KEEPERS_SENTENCE}"
