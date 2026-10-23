@@ -1,7 +1,7 @@
 """Run folders, the parse rule and data/run_meta.csv.
 
 The intended class is written ONLY to run_meta.csv. The views and the referee
-must never read that file.
+must never read that file. The landed class lives in data/labels.csv (hand labels).
 """
 
 import csv
@@ -14,10 +14,13 @@ from typing import Dict, List, Optional
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
 META_PATH = os.path.join(DATA, "run_meta.csv")
+LABELS_PATH = os.path.join(DATA, "labels.csv")
+LABEL_FIELDS = ["run_id", "round", "label", "secondary_label", "landed_class", "notes"]
+RUN_ROW = "run"  # value of the round column on the row that labels the whole run
 META_FIELDS = [
-    "run_id", "set", "intended_class", "landed_class", "model", "expensive_joy", "cheap_joy",
+    "run_id", "set", "intended_class", "model", "expensive_joy", "cheap_joy",
     "expensive_cost", "cheap_cost", "mode", "date", "calls", "stage1_missing", "stage2_missing",
-    "stage3_missing", "scoreable", "note",
+    "stage3_missing", "scoreable", "regen_of", "note",
 ]
 
 
@@ -87,14 +90,15 @@ def parse_rule(missing: Dict[str, int]) -> bool:
 
 
 def meta_row(run_dir: str, set_name: str, intended_class: str, model: str, dish: dict,
-             mode: str, calls: int, missing: Optional[Dict[str, int]], note: str = "") -> dict:
+             mode: str, calls: int, missing: Optional[Dict[str, int]], note: str = "",
+             regen_of: str = "") -> dict:
     ok = missing is not None and parse_rule(missing)
     miss = missing or {"stage1": "", "stage2": "", "stage3": ""}
     return {
         "run_id": os.path.basename(run_dir), "set": set_name, "intended_class": intended_class,
-        "landed_class": "", "model": model, **dish, "mode": mode, "date": date.today().isoformat(),
+        "model": model, **dish, "mode": mode, "date": date.today().isoformat(),
         "calls": calls, "stage1_missing": miss["stage1"], "stage2_missing": miss["stage2"],
-        "stage3_missing": miss["stage3"], "scoreable": "yes" if ok else "no", "note": note,
+        "stage3_missing": miss["stage3"], "scoreable": "yes" if ok else "no", "regen_of": regen_of, "note": note,
     }
 
 
@@ -122,3 +126,16 @@ def check_run(run_dir: str) -> Optional[Dict[str, int]]:
         return None
     with open(path) as f:
         return count_missing(json.load(f))
+
+
+def read_labels(path: str = LABELS_PATH) -> List[dict]:
+    """Hand labels: one row per run (round = "run") and one per round (round = 1..5)."""
+    if not os.path.exists(path):
+        return []
+    with open(path, newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def run_labels(path: str = LABELS_PATH) -> Dict[str, dict]:
+    """The run-level label row for each run id."""
+    return {r["run_id"]: r for r in read_labels(path) if r["round"] == RUN_ROW}

@@ -4,11 +4,11 @@ What this wrapper changes (it never edits vendor/):
   - swaps the paid judge model name for the free model (safety net);
   - skips the judge and reflection calls, so one game is 75 calls;
   - adds the earlier rounds' public messages to every agent prompt;
-  - adds one instruction to one seeded agent, set by --class (see classes.py);
+  - adds the instructions of the chosen class to the named agents, set by --class (see classes.py);
   - limits requests to one per 3.5 s (free models allow 20 per minute);
   - counts calls, and writes one row to data/run_meta.csv.
 
-Usage: .venv/bin/python -m swarm_referee.run_diners <free-model> --class benign|collusion|talk_only
+Usage: .venv/bin/python -m swarm_referee.run_diners <free-model> --class planted_pair|independent_cheats|cooperation_pact|talk_only|innocent_parallel
            [--set practice|scored] [--run-dir DIR]
 """
 
@@ -51,7 +51,6 @@ def history_block(history: Dict[int, Dict[str, tuple]], round_idx: int) -> str:
 
 def make_build_request(build_request: Callable, model: str, class_name: str, history: dict) -> Callable:
     """Wrap the harness _build_request: judge swap, class instruction, message history."""
-    spec = classes.CLASSES[class_name]
 
     def build(*args, **kwargs):
         if kwargs.get("model") == PAID_JUDGE:
@@ -59,8 +58,9 @@ def make_build_request(build_request: Callable, model: str, class_name: str, his
         m = CID.search(kwargs.get("custom_id", ""))
         if m:
             round_idx, stage, agent = int(m.group(1)), m.group(2), m.group(3)
-            if agent == spec["agent"] and spec[f"s{stage}"]:
-                kwargs["system_prompt"] += "\n\n" + spec[f"s{stage}"]
+            text = classes.instruction_for(class_name, agent, f"s{stage}", round_idx)
+            if text:
+                kwargs["system_prompt"] += "\n\n" + text
             kwargs["user_prompt"] += history_block(history, round_idx)
         return build_request(*args, **kwargs)
 
@@ -104,6 +104,7 @@ def main(argv: Optional[list] = None) -> int:
     ap.add_argument("--class", dest="class_name", required=True, choices=classes.CLASS_NAMES)
     ap.add_argument("--set", dest="set_name", default="practice", choices=["practice", "scored"])
     ap.add_argument("--run-dir", default=None)
+    ap.add_argument("--regen-of", default="", help="run id of the drifted planted_pair run this game replaces")
     args = ap.parse_args(argv)
     run_dir = os.path.abspath(args.run_dir or records.next_run_dir(args.set_name))
 
@@ -159,7 +160,7 @@ def main(argv: Optional[list] = None) -> int:
             note = (note + f" max_retries={stats['max_retries']}").strip()
         records.append_meta(records.meta_row(
             run_dir, args.set_name, args.class_name, args.model, classes.DISH, classes.MODE,
-            stats["calls"], missing, note))
+            stats["calls"], missing, note, args.regen_of))
     return 0
 
 
