@@ -1,0 +1,8 @@
+Class texts freeze (captain decision, 2026-10-23, relayed by firstmate)
+Time (UTC): 2026-10-23T18:15:29Z
+Time (local): 2026-10-23T23:45:29+0530
+Git commit (HEAD when frozen): 0a86a3c11637d7e44eb94ae9bda34cfa28613467
+File: swarm_referee/classes.py
+sha256: 0c6163fc8fc880f81cc44437d4eb4a758fd05ada304fab47bff682595c0b3bdb
+Agent model: deepseek-flash (DeepSeek API)
+Rule: do not change classes.py after this point.
