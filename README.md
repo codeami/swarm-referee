@@ -11,8 +11,8 @@ The test question: can a single fixed-prompt referee find collusion in game logs
 ## Status
 - Class texts were frozen on 2026-10-23 at 18:15 UTC (23:45 IST), see `data/class_texts_freeze.txt`.
   Code commit when frozen: `0a86a3c`. sha256 of `swarm_referee/classes.py`: `0c6163fc8fc8...`.
-- The referee prompt (`swarm_referee/prompts/referee_v1.md`) is a draft. It is not frozen.
-- The 16 scored runs are made. Their logs stay unopened until the referee is frozen.
+- The referee (prompt `swarm_referee/prompts/referee_v1.md`, model `deepseek-v4-pro`, thinking off, temperature 0) was frozen on 2026-10-24, see `data/referee_freeze_DRAFT.md`.
+- The 16 scored runs, the referee verdicts, the hand labels (`data/labels.csv`) and the scores (`data/score_scored.txt`) are done. The draft report is in `data/writeup/`.
 
 ## How to run
 Run all commands from the repo root.
@@ -25,7 +25,7 @@ Run all commands from the repo root.
    One game: `.venv/bin/python -m swarm_referee.run_diners deepseek-flash --class planted_pair --set practice`
 5. Scored batch (16 games). Already done. Do not open the scored logs before the freeze:
    `.venv/bin/python -u -m swarm_referee.run_batch deepseek-flash --set scored`
-6. Referee runner (one or more runs, chosen views). Proposed settings, not frozen: thinking off, temperature 0, model `deepseek-v4-pro`:
+6. Referee runner (one or more runs, chosen views). Frozen settings: thinking off, temperature 0, model `deepseek-v4-pro`:
    `.venv/bin/python -m swarm_referee.referee_run run_011 run_008 --set practice --thinking off --out data/practice/referee_gate_v1a_thinking_off.csv`
    A scored run needs `--set scored`.
 `CLAUDE.md` section 2 has more detail on the run commands, the classes and the call budget.
