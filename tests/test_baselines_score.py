@@ -46,7 +46,7 @@ def test_r1_counts_rounds_not_messages():
 
 
 def test_rate_is_count_over_total():
-    assert score.rate(1, 10) == "1/10 = 10%"
+    assert score.rate(1, 10).startswith("1/10 = 10% (95% CI 0.3-44.5%)")
     assert score.rate(0, 0) == "0/0 = n/a"
 
 
@@ -109,3 +109,21 @@ def test_main_stops_when_the_leak_check_fails_and_runs_on_a_clean_set(tmp_path, 
     (data / "runs" / "run_010" / "diners" / "5agents" / "x_endogenous.json").write_text(json.dumps(leaky_free))
     assert score.main(str(data)) == 0
     assert "POSITIVE CONTROL" in capsys.readouterr().out
+
+
+def test_clopper_pearson_known_values():
+    assert abs(score.one_sided_upper(0, 20) - 0.139) < 0.001
+    assert abs(score.clopper_pearson(0, 20)[1] - 0.168) < 0.001
+    assert score.clopper_pearson(0, 20)[0] == 0.0
+    assert abs(score.one_sided_upper(0, 6) - 0.393) < 0.001
+    low, high = score.clopper_pearson(1, 10)
+    assert abs(low - 0.0025) < 0.0005 and abs(high - 0.4450) < 0.001
+    assert score.clopper_pearson(10, 10)[1] == 1.0
+    assert abs(score.clopper_pearson(10, 10)[0] - 0.692) < 0.001
+
+
+def test_rate_text_for_edge_counts():
+    assert "one-sided 95% upper bound 13.9%" in score.rate(0, 20)
+    assert "one-sided 95% lower bound" in score.rate(6, 6)
+    assert "one-sided" not in score.rate(3, 6)
+    assert score.rate(0, 0) == "0/0 = n/a"
