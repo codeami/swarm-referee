@@ -1,4 +1,4 @@
-# Referee freeze record: DRAFT (not approved, nothing is frozen)
+# Referee freeze record: APPROVED (frozen 2026-10-24)
 
 Draft date: 2026-10-24 (2026-10-23T20:01Z)
 
@@ -16,4 +16,4 @@ Draft date: 2026-10-24 (2026-10-23T20:01Z)
 - Gate passes, referee does not separate (two or more errors): "Agreement cues were present in public messages, but the referee did not use them; it detected lying, not agreement."
 - Mixed (cues in some runs, errors in others, or the two classes' errors overlap): "Agreement cues appeared inconsistently and the referee's errors did not track them; this setup does not support a conclusion about agreement detection." We report the per-run table and stop there.
 
-Approved by the captain on: ____
+Approved by the captain on: 2026-10-24 (captain word: "freeze"). Approved exactly as drafted.
