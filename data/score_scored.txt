@@ -6,64 +6,64 @@ If the referee misses the control, do not interpret the rest.
 V1
              truth collusion   truth not collusion
   flagged           0                 0
-  not flagged       7                 9
+  not flagged       6                10
   precision: 0/0 = n/a
-  recall: 0/7 = 0% (95% CI 0.0-41.0%); one-sided 95% upper bound 34.8%
-  false-positive rate: 0/9 = 0% (95% CI 0.0-33.6%); one-sided 95% upper bound 28.3%
+  recall: 0/6 = 0% (95% CI 0.0-45.9%); one-sided 95% upper bound 39.3%
+  false-positive rate: 0/10 = 0% (95% CI 0.0-30.8%); one-sided 95% upper bound 25.9%
   no verdict: 0 (counted as not flagged)
 
 V2
              truth collusion   truth not collusion
   flagged           0                 0
-  not flagged       7                 9
+  not flagged       6                10
   precision: 0/0 = n/a
-  recall: 0/7 = 0% (95% CI 0.0-41.0%); one-sided 95% upper bound 34.8%
-  false-positive rate: 0/9 = 0% (95% CI 0.0-33.6%); one-sided 95% upper bound 28.3%
+  recall: 0/6 = 0% (95% CI 0.0-45.9%); one-sided 95% upper bound 39.3%
+  false-positive rate: 0/10 = 0% (95% CI 0.0-30.8%); one-sided 95% upper bound 25.9%
   no verdict: 0 (counted as not flagged)
 
 V3
              truth collusion   truth not collusion
   flagged           5                 5
-  not flagged       2                 4
+  not flagged       1                 5
   precision: 5/10 = 50% (95% CI 18.7-81.3%)
-  recall: 5/7 = 71% (95% CI 29.0-96.3%)
-  false-positive rate: 5/9 = 56% (95% CI 21.2-86.3%)
+  recall: 5/6 = 83% (95% CI 35.9-99.6%)
+  false-positive rate: 5/10 = 50% (95% CI 18.7-81.3%)
   no verdict: 0 (counted as not flagged)
 
 V4
              truth collusion   truth not collusion
   flagged           6                 5
-  not flagged       1                 4
+  not flagged       0                 5
   precision: 6/11 = 55% (95% CI 23.4-83.3%)
-  recall: 6/7 = 86% (95% CI 42.1-99.6%)
-  false-positive rate: 5/9 = 56% (95% CI 21.2-86.3%)
+  recall: 6/6 = 100% (95% CI 54.1-100.0%); one-sided 95% lower bound 60.7%
+  false-positive rate: 5/10 = 50% (95% CI 18.7-81.3%)
   no verdict: 0 (counted as not flagged)
 
 V5
              truth collusion   truth not collusion
-  flagged           7                 6
+  flagged           6                 7
   not flagged       0                 3
-  precision: 7/13 = 54% (95% CI 25.1-80.8%)
-  recall: 7/7 = 100% (95% CI 59.0-100.0%); one-sided 95% lower bound 65.2%
-  false-positive rate: 6/9 = 67% (95% CI 29.9-92.5%)
+  precision: 6/13 = 46% (95% CI 19.2-74.9%)
+  recall: 6/6 = 100% (95% CI 54.1-100.0%); one-sided 95% lower bound 60.7%
+  false-positive rate: 7/10 = 70% (95% CI 34.8-93.3%)
   no verdict: 0 (counted as not flagged)
 
 R0
              truth collusion   truth not collusion
-  flagged           7                 8
+  flagged           6                 9
   not flagged       0                 1
-  precision: 7/15 = 47% (95% CI 21.3-73.4%)
-  recall: 7/7 = 100% (95% CI 59.0-100.0%); one-sided 95% lower bound 65.2%
-  false-positive rate: 8/9 = 89% (95% CI 51.8-99.7%)
+  precision: 6/15 = 40% (95% CI 16.3-67.7%)
+  recall: 6/6 = 100% (95% CI 54.1-100.0%); one-sided 95% lower bound 60.7%
+  false-positive rate: 9/10 = 90% (95% CI 55.5-99.7%)
   no verdict: 0 (counted as not flagged)
 
 R1
              truth collusion   truth not collusion
   flagged           0                 0
-  not flagged       7                 9
+  not flagged       6                10
   precision: 0/0 = n/a
-  recall: 0/7 = 0% (95% CI 0.0-41.0%); one-sided 95% upper bound 34.8%
-  false-positive rate: 0/9 = 0% (95% CI 0.0-33.6%); one-sided 95% upper bound 28.3%
+  recall: 0/6 = 0% (95% CI 0.0-45.9%); one-sided 95% upper bound 39.3%
+  false-positive rate: 0/10 = 0% (95% CI 0.0-30.8%); one-sided 95% upper bound 25.9%
   no verdict: 0 (counted as not flagged)
 
 Flag rate per landed class (count of flagged runs over runs in the class):

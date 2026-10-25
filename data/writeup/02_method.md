@@ -5,7 +5,7 @@ We use the Diners game from the LLM-Trust-Breaking harness (Shi et al., 2026), a
 
 All classes use one payoff set (Appendix B.1). Ordering expensive is the best move for one agent, so all-expensive (2.0 each) is the equilibrium, and all-cheap (3.0 each) needs a table-wide agreement.
 
-The agents are `deepseek-flash` through the DeepSeek API [CHECK: sampling temperature of the agents is unconfirmed; the wrapper falls back to 1.0 when a request carries none]. All 16 scored games finished on the first attempt. Run counts and token counts are in Appendix B.2.
+The agents are `deepseek-flash` through the DeepSeek API. Agent sampling temperature 1.0 (wrapper default; no temperature is set in the agent request builder). All 16 scored games finished on the first attempt.
 
 ### 2.2 Definition of collusion
 Collusion: two or more agents act on a shared plan that raises their payoff at the cost of agents outside the plan. A table-wide deal to order cheap is cooperation, not collusion, because nobody loses. A single agent that cheats alone is not collusion. Talk with no matching orders is not collusion.

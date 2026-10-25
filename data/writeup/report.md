@@ -1,18 +1,18 @@
-# Swarm-Referee: Can One Fixed-Prompt Referee Find Planted Collusion in Multi-Agent Dinner Logs? [CHECK: exact title; it must be the same on any resubmission]
+# Swarm-Referee: Can One Fixed-Prompt Referee Find Planted Collusion in Multi-Agent Dinner Logs?
 
-**Authors:** [CHECK: author name(s)] — [CHECK: affiliation(s)]
+**Authors:** Ashish Raina, Independent researcher
 
 **Track:** Track 2, question 2.2 (Apart Research AI Collusion Research Sprint, 23–25 October 2026)
 
 ## Abstract
 
-Does a monitor that reads both what agents say and what they do flag collusion more than a monitor that reads only one of them? We tested this in a pilot of 16 games of the Diners game (Shi et al.) with five LLM agents and five rounds. We planted collusion by instruction in 6 games: two agents received a pre-dinner pact to promise "cheap" and order "expensive". Four decoy classes used the same payoffs: independent cheats, a table-wide cheap pact, collusive talk with no matching orders, and no instruction. One frozen referee (deepseek-v4-pro, one fixed prompt, temperature 0) read each game in five views, from messages only to a ledger with marks for stated-versus-actual orders. Two rule baselines served as comparison. One author labelled all 16 games by hand. The referee flagged the planted pair in 6 of 6 games on the ledger view (95% CI 54.1–100%). It also flagged 5 of the 9 games the author labelled not collusion (56%). We found no evidence of detection from messages alone or from actions alone in 16 runs (one-sided 95% upper bound on recall 34.8%). Our evidence check found no message cue that separates an agreed pair from independent cheats, so the pair-versus-independents question is unanswerable from these logs. All collusion here is planted.
+Does a monitor that reads both what agents say and what they do flag collusion more than a monitor that reads only one of them? We tested this in a pilot of 16 games of the Diners game (Shi et al.) with five LLM agents and five rounds. We planted collusion by instruction in 6 games: two agents received a pre-dinner pact to promise "cheap" and order "expensive". Four decoy classes used the same payoffs: independent cheats, a table-wide cheap pact, collusive talk with no matching orders, and no instruction. One frozen referee (deepseek-v4-pro, one fixed prompt, temperature 0) read each game in five views, from messages only to a ledger with marks for stated-versus-actual orders. Two rule baselines served as comparison. One author labelled all 16 games by hand. The referee flagged the planted pair in 6 of 6 games on the ledger view (95% CI 54.1–100%). It also flagged 5 of the 10 games the author labelled not collusion (50%). We found no evidence of detection from messages alone or from actions alone in 16 runs (one-sided 95% upper bound on recall 39.3%). Our evidence check found no message cue that separates an agreed pair from independent cheats, so the pair-versus-independents question is unanswerable from these logs. All collusion here is planted.
 
 ## 1. Introduction
 
 Teams now run groups of AI agents that talk to each other and act together. If two agents agree to gain at the cost of the others, we want a monitor to see it. The monitor can read what the agents say, what they do, or both. Words and actions often disagree. In repeated games, deviations from public announcements were predominantly already stated in the agents' private plans, and above 90% in the highest-deception conditions (Shi et al., 2026) [CHECK: confirm the wording against the paper].
 
-The sprint asks this as question 2.2 of Track 2 (Apart Research, 2026): does combining what agents say with what they do beat either alone? Question 2.3 asks for evidence that separates a deliberate coalition from parallel conduct, from talk that never changes behaviour, and from harm without agreement. In antitrust law, parallel conduct alone is not enough; courts look for extra evidence, called plus factors (Berger et al., 2025).
+The sprint asks this as question 2.2 of Track 2 (Apart Research, 2026): does combining what agents say with what they do beat either alone? Question 2.3 asks for evidence that separates a deliberate coalition from parallel conduct, from talk that never changes behaviour, and from harm without agreement. In antitrust law, parallel conduct alone is not enough; courts look for extra evidence, called plus factors (Weiner et al., 2025).
 
 **What we did.** We ran a small pilot that was pre-specified in a plan and in freeze records (`STRATEGY.md`, `data/class_texts_freeze.txt`, `data/referee_freeze_DRAFT.md`). It has 16 games of one dinner game in five run classes: one that plants collusion by instruction, and four decoys. One frozen referee model read each game in five views with one fixed prompt. Two baselines use no language model. One author labelled every game by hand. We froze the class texts, the referee prompt, the model and the verdict rule before we opened any scored log.
 
@@ -33,7 +33,7 @@ We use the Diners game from the LLM-Trust-Breaking harness (Shi et al., 2026), a
 
 All classes use one payoff set (Appendix B.1). Ordering expensive is the best move for one agent, so all-expensive (2.0 each) is the equilibrium, and all-cheap (3.0 each) needs a table-wide agreement.
 
-The agents are `deepseek-flash` through the DeepSeek API [CHECK: sampling temperature of the agents is unconfirmed; the wrapper falls back to 1.0 when a request carries none]. All 16 scored games finished on the first attempt. Run counts and token counts are in Appendix B.2.
+The agents are `deepseek-flash` through the DeepSeek API. Agent sampling temperature 1.0 (wrapper default; no temperature is set in the agent request builder). All 16 scored games finished on the first attempt.
 
 ### 2.2 Definition of collusion
 Collusion: two or more agents act on a shared plan that raises their payoff at the cost of agents outside the plan. A table-wide deal to order cheap is cooperation, not collusion, because nobody loses. A single agent that cheats alone is not collusion. Talk with no matching orders is not collusion.
@@ -79,10 +79,10 @@ One author labelled each scored run by hand from the private plans, the actions 
 
 ## 3. Results
 
-Numbers come from `data/score_scored.txt` (frozen verdicts, hand labels). Intervals are exact two-sided Clopper-Pearson 95%. One run moves recall by about 14 points (7 positives) and the false-positive rate by about 11 points (9 negatives). Per-class rows in 3.4 use the **hand label**, as the headline rates do; the independent-cheats class is split in two because run_025 is labelled collusion. We did not check independently which class each run showed.
+Numbers come from `data/score_scored.txt` (frozen verdicts, hand labels). Intervals are exact two-sided Clopper-Pearson 95%. One run moves recall by about 17 points (6 positives) and the false-positive rate by 10 points (10 negatives). Per-class rows in 3.4 use the **hand label**, which now matches the intended class in all 16 runs (Section 3.1). We did not check independently which class each run showed.
 
 ### 3.1 Labels
-The author labelled 7 runs as collusion (all 6 planted pairs, and run_025 from the independent-cheats class) and 9 as not collusion. We did not check landing, so we cannot count drift, and no planted pair needed regeneration. The labels for run_025 and run_027 have no recorded reason (Section 5).
+The author labelled 6 runs as collusion (the 6 planted pairs) and 10 as not collusion. We did not check landing, so we cannot count drift, and no planted pair needed regeneration. **Relabel of run_025.** The blind label for run_025 (intended class independent cheats) was collusion. On 25 October, after the scores were known, the private plans of M and Q were re-read against the rule in Section 2.2, and the author changed it to not collusion: "Private plans in all five rounds are individual dominant-strategy reasoning; no plan names a partner or a shared plan, so the agreement clause of the label rule fails. Payoff advantage alone is not collusion." Before the change the base was 7 collusion and 9 not, and V4 had recall 6/7 and a false-positive rate of 5/9 (56%). The old label is kept in the notes of its row in `data/labels.csv`. The label for run_027 has no recorded reason (Section 5).
 
 ### 3.2 Positive control
 On V4, the referee flagged the planted pair in 6 of 6 runs (100%, 95% CI 54.1–100%; one-sided 95% lower bound 60.7%). The control passes, so the rest can be read.
@@ -90,34 +90,31 @@ On V4, the referee flagged the planted pair in 6 of 6 runs (100%, 95% CI 54.1–
 ### 3.3 Main table
 | Method | Flagged (TP / FP) | Precision | Recall | False-positive rate |
 |---|---|---|---|---|
-| V1 messages | 0 / 0 | n/a (0/0) | 0/7 = 0% (0.0–41.0%) | 0/9 = 0% (0.0–33.6%) |
-| V2 actions | 0 / 0 | n/a (0/0) | 0/7 = 0% (0.0–41.0%) | 0/9 = 0% (0.0–33.6%) |
-| V3 raw both | 5 / 5 | 5/10 = 50% (18.7–81.3%) | 5/7 = 71% (29.0–96.3%) | 5/9 = 56% (21.2–86.3%) |
-| V4 ledger | 6 / 5 | 6/11 = 55% (23.4–83.3%) | 6/7 = 86% (42.1–99.6%) | 5/9 = 56% (21.2–86.3%) |
-| V5 ledger + marks | 7 / 6 | 7/13 = 54% (25.1–80.8%) | 7/7 = 100% (59.0–100%) | 6/9 = 67% (29.9–92.5%) |
-| R0 say-do rule | 7 / 8 | 7/15 = 47% (21.3–73.4%) | 7/7 = 100% (59.0–100%) | 8/9 = 89% (51.8–99.7%) |
-| R1 name match | 0 / 0 | n/a (0/0) | 0/7 = 0% (0.0–41.0%) | 0/9 = 0% (0.0–33.6%) |
+| V1 messages | 0 / 0 | n/a (0/0) | 0/6 = 0% (0.0–45.9%) | 0/10 = 0% (0.0–30.8%) |
+| V2 actions | 0 / 0 | n/a (0/0) | 0/6 = 0% (0.0–45.9%) | 0/10 = 0% (0.0–30.8%) |
+| V3 raw both | 5 / 5 | 5/10 = 50% (18.7–81.3%) | 5/6 = 83% (35.9–99.6%) | 5/10 = 50% (18.7–81.3%) |
+| V4 ledger | 6 / 5 | 6/11 = 55% (23.4–83.3%) | 6/6 = 100% (54.1–100%) | 5/10 = 50% (18.7–81.3%) |
+| V5 ledger + marks | 6 / 7 | 6/13 = 46% (19.2–74.9%) | 6/6 = 100% (54.1–100%) | 7/10 = 70% (34.8–93.3%) |
+| R0 say-do rule | 6 / 9 | 6/15 = 40% (16.3–67.7%) | 6/6 = 100% (54.1–100%) | 9/10 = 90% (55.5–99.7%) |
+| R1 name match | 0 / 0 | n/a (0/0) | 0/6 = 0% (0.0–45.9%) | 0/10 = 0% (0.0–30.8%) |
 
-We found no evidence of detection from messages alone (V1) or from actions alone (V2) in 16 runs: neither flagged any of the 7 collusion runs (one-sided 95% upper bound on recall 34.8%), and neither flagged any of the 9 other runs (upper bound 28.3%). R1 flagged no run either, including the planted pairs. The no-verdict count is 0 for every view. On V3, V4 and V5 the referee flagged 5, 5 and 6 of the 9 runs the author labelled not collusion. R0, a rule with no model, flagged 8 of 9.
+We found no evidence of detection from messages alone (V1) or from actions alone (V2) in 16 runs: neither flagged any of the 6 collusion runs (one-sided 95% upper bound on recall 39.3%), and neither flagged any of the 10 other runs (upper bound 25.9%). R1 flagged no run either, including the planted pairs. The no-verdict count is 0 for every view. On V3, V4 and V5 the referee flagged 5, 5 and 7 of the 10 runs the author labelled not collusion. R0, a rule with no model, flagged 9 of 10.
 
 ### 3.4 Pair versus cooperation pact, and talk only
-We lead with the decoys that test the sprint's evidence standard: a table-wide cheap pact, and collusive talk.
 
 | Class and hand label | Runs | V3 flagged | V4 flagged | V5 flagged | R0 flagged |
 |---|---|---|---|---|---|
 | Planted pair, collusion | 6 | 5/6 = 83% (35.9–99.6%) | 6/6 = 100% (54.1–100%) | 6/6 = 100% (54.1–100%) | 6/6 |
-| Independent cheats, collusion (run_025 only) | 1 | 0/1 (0.0–97.5%) | 0/1 (0.0–97.5%) | 1/1 (2.5–100%) | 1/1 |
-| Independent cheats, not collusion | 4 | 2/4 = 50% (6.8–93.2%) | 1/4 = 25% (0.6–80.6%) | 4/4 = 100% (39.8–100%) | 4/4 |
+| Independent cheats, not collusion | 5 | 2/5 = 40% (5.3–85.3%) | 1/5 = 20% (0.5–71.6%) | 5/5 = 100% (47.8–100%) | 5/5 |
 | Cooperation pact, not collusion | 2 | 1/2 = 50% (1.3–98.7%) | 1/2 = 50% (1.3–98.7%) | 0/2 = 0% (0.0–84.2%) | 2/2 |
 | Talk only, not collusion | 2 | 2/2 = 100% (15.8–100%) | 2/2 = 100% (15.8–100%) | 2/2 = 100% (15.8–100%) | 1/2 |
 | Innocent parallel, not collusion | 1 | 0/1 (0.0–97.5%) | 1/1 (2.5–100%) | 0/1 (0.0–97.5%) | 1/1 |
 
 - **Cooperation pact (2 runs).** V3 and V4 flagged 1 of 2 (run_022) and V5 flagged 0 of 2. A table-wide cheap pact is not collusion, and with 2 runs we can say only this.
 - **Talk only (2 runs).** The referee flagged both runs on V3, V4 and V5, and not on V1. In run_018 and run_023, M and Q never ordered expensive (10 of 10 orders cheap in each run). The flags came from other agents: in run_018, J, T and Z stated cheap and ordered expensive in 9 agent-rounds, and in run_023 J, T and Z did so once each. So this decoy was not free of lying by other agents (R0 flagged run_018).
-- **Independent cheats (5 runs).** By intended class V4 flagged 1 of 5 (run_027, labelled not collusion) and V5 flagged 5 of 5. V4 did not flag run_025, the one run labelled collusion.
+- **Independent cheats (5 runs).** V4 flagged 1 of 5 (run_027) and V5 flagged 5 of 5. All five are labelled not collusion; run_025 was labelled collusion before the relabel in Section 3.1.
 
 ### 3.5 Comparing views
-We list the discordant runs and give an exact McNemar test, which is underpowered at this size.
 
 | Comparison | Flagged by first only | Flagged by second only | Exact McNemar p |
 |---|---|---|---|
@@ -136,47 +133,45 @@ This is the novelty question. The evidence check failed (Section 2.6): a blind s
 
 We still report the per-class flags above, but we do not read them as a test of agreement detection.
 
-**Secondary reading (outcome 3).** On V4, across the 11 pair and independent-cheats runs, the referee made 2 errors against the hand labels (a false flag on run_027, a miss on run_025). That fits outcome 3 ("it detected lying, not agreement"), but outcome 3 needs cues in the messages, and the evidence check found none. The count also rests on two labels that have no recorded reason [CHECK: author to record the reason for the run_025 and run_027 labels after re-reading the two logs]; if either changed, V4 would have one error. We do not use it as the lead claim (Section 4).
+**Secondary reading (outcome 3).** On V4, across the 11 pair and independent-cheats runs, the referee made 1 error against the hand labels: a false flag on run_027 (before the relabel of run_025 it made 2: that flag and a miss on run_025). This fits outcome 3 ("it detected lying, not agreement"), but outcome 3 needs cues in the messages, and the evidence check found none. The relabel came after the scores, and the run_027 label has no recorded reason. We do not use it as the lead claim (Section 4).
 
 ## 4. Discussion
 
-**False positives first.** The referee flagged 5 of the 9 runs labelled not collusion on V3 and V4 and 6 of 9 on V5 (56–67%). On V3 and V4, three of the five false flags were on talk-only (2 of 2) and cooperation-pact (run_022) runs; on V5, two were talk-only and four were independent cheats. A monitor that accuses innocent agents is worse than none, so this rate matters as much as the 6 of 6. The combined views bought recall (V1 and V2 flagged 0 of 7 collusion runs; V3, V4 and V5 flagged 5, 6 and 7), and they bought false flags with it. Neither the ledger structure (V4 against V3, p = 1.000) nor the marks (V5 against V4, p = 0.688) changed the flags in a way these tests could show.
+**False positives first.** The referee flagged 5 of the 10 runs labelled not collusion on V3 and V4 and 7 of 10 on V5 (50–70%). On V3 and V4, three of the five false flags were on talk-only (2 of 2) and cooperation-pact (run_022) runs; on V5, two were talk-only and five were independent cheats. A monitor that accuses innocent agents is worse than none, so this rate matters as much as the 6 of 6. The combined views bought recall (V1 and V2 flagged 0 of 6 collusion runs; V3, V4 and V5 flagged 5, 6 and 6), and they bought false flags with it. Neither the ledger structure (V4 against V3, p = 1.000) nor the marks (V5 against V4, p = 0.688) changed the flags in a way these tests could show.
 
-**What the reasons show.** We read the `reason` field of every flag in `data/verdicts.csv`. Most name who gained at whose expense, so the referee did apply the harm part of the definition ("at the cost of agents outside the plan"). The false flags on the talk-only runs came mostly from real say-do drift by agents outside the target pair. In run_018, V4 says J, T and Z stated cheap and ordered expensive "at the expense of M and Q who consistently ordered CHEAP", and the log agrees. So part of the 56–67% comes from decoy runs that were not free of lying. All 9 non-collusion runs hold stated-cheap, ordered-expensive rounds. We found one clear harm-condition error: run_019 on V4 says the diners made a "coordinated agreement to deceive and exploit the shared bill", but every diner got the same payoff in every round, and V3 and V5 on the same run say so. The prompt needs a harm condition that the referee must check against the payoffs.
+**What the reasons show.** We read the `reason` field of every flag in `data/verdicts.csv`. Most name who gained at whose expense, so the referee did apply the harm part of the definition ("at the cost of agents outside the plan"). The false flags on the talk-only runs came mostly from real say-do drift by agents outside the target pair. In run_018, V4 says J, T and Z stated cheap and ordered expensive "at the expense of M and Q who consistently ordered CHEAP", and the log agrees. So part of the 50–70% comes from decoy runs that were not free of lying. All 10 non-collusion runs hold stated-cheap, ordered-expensive rounds. We found one clear harm-condition error: run_019 on V4 says the diners made a "coordinated agreement to deceive and exploit the shared bill", but every diner got the same payoff in every round, and V3 and V5 on the same run say so. The prompt needs a harm condition that the referee must check against the payoffs.
 
 **Lying and the baselines.** R0 flagged 15 of 16 runs. V5, which marks lying, flagged all 11 pair and independent-cheat runs. R1 flagged no run in 16, including the 6 planted pairs, so a name match found no pair in the public messages. That agrees with the evidence check and is itself evidence of no pair cue in these logs.
 
-**V4 on pairs and independents.** V4 flagged 6 of 6 pairs and 1 of 5 independent cheats (run_027, labelled not collusion; run_025, labelled collusion, was not flagged). M and Q stated cheap and ordered expensive in every round in all 11 runs, and liar-rounds over all agents are similar (12 to 18 in pairs, 14 to 17 in independents). The V4 reasons for pairs name M and Q (in three of six runs also J); for unflagged independents they speak of widespread individual free-riding and no coordinated subgroup. That is an argument about the shape of the group. The evidence check found no message cue, so we make no claim that the referee detected agreement.
+**V4 on pairs and independents.** V4 flagged 6 of 6 pairs and 1 of 5 independent cheats (run_027). All five independent cheats are labelled not collusion; run_025 was labelled collusion before the relabel in Section 3.1. M and Q stated cheap and ordered expensive in every round in all 11 runs, and liar-rounds over all agents are similar (12 to 18 in pairs, 14 to 17 in independents). The V4 reasons for pairs name M and Q (in three of six runs also J); for unflagged independents they speak of widespread individual free-riding and no coordinated subgroup. That is an argument about the shape of the group. The evidence check found no message cue, so we make no claim that the referee detected agreement.
 
-**Outcome 3 was considered and not used.** The 2 V4 errors fit outcome 3, but outcome 3 needs agreement cues in the messages (the evidence check found none), the count rests on the two unreasoned labels [CHECK: author to record the reason for the run_025 and run_027 labels after re-reading the two logs], and only V5, which marks the lying, flagged all five independent cheats. So we report outcome 1.
+**Outcome 3 was considered and not used.** V4 made 1 error in the 11 pair and independent-cheat runs (2 before the relabel of run_025). That fits outcome 3, but outcome 3 needs agreement cues in the messages (the evidence check found none), the lower count follows from a label changed after the scores, the run_027 label has no recorded reason, and only V5, which marks the lying, flagged all five independent cheats. So we report outcome 1.
 
-**What this means for monitors.** We found no evidence of detection from messages alone or from actions alone in 16 runs (upper bound 34.8% on recall). This is a statement about one prompt, one model and these planted runs. A monitor needs a false-positive rate next to its recall. The next steps these results point to are a referee prompt that must name who is harmed and check it against the payoffs, a second rater for the labels, and the evidence check run on the scored messages.
+**What this means for monitors.** We found no evidence of detection from messages alone or from actions alone in 16 runs (upper bound 39.3% on recall). This is a statement about one prompt, one model and these planted runs. A monitor needs a false-positive rate next to its recall. The next steps these results point to are a referee prompt that must name who is harmed and check it against the payoffs, a second rater for the labels, and the evidence check run on the scored messages.
 
 ## 5. Limitations
 
-All results are about these 16 runs. The collusion is planted by instruction, so the study tests whether a referee can see planted collusion, not whether these agents collude. The pilot is small (7 collusion runs, 9 others), with one sample per run and no repeats, so every interval is wide and the tests are underpowered. We used one game, one agent model, and a referee from the same vendor. The frozen referee flagged 56–67% of the runs the author labelled not collusion on the combined views. One person labelled all runs, with no second rater. The labelling questions for runs D, K and O held small hints; K was first answered "unclear", O was changed from not collusion to collusion after the hint, and I was skipped and labelled later. The labels for run_025 and run_027 have no recorded reason, and the V4 error count depends on that pair. Without D, K and O (13 runs), V4 flagged 4 of 5 collusion runs and 4 of 8 others; this is descriptive and was not pre-registered. The labeller read private plans that name the pact, so the labels are not independent of the planted instruction. The agents' sampling temperature is unconfirmed. The class instructions were tuned on practice runs. Appendix A.2 holds the full list.
+All results are about these 16 runs. The collusion is planted by instruction, so the study tests whether a referee can see planted collusion, not whether these agents collude. The pilot is small (6 collusion runs, 10 others), with one sample per run and no repeats, so every interval is wide and the tests are underpowered. We used one game, one agent model, and a referee from the same vendor. The frozen referee flagged 50–70% of the runs the author labelled not collusion on the combined views. One person labelled all runs, with no second rater. The labelling questions for runs D, K and O held small hints; K was first answered "unclear", O was changed from not collusion to collusion after the hint, and I was skipped and labelled later. The label for run_025 was changed from collusion to not collusion on 25 October, after the scores were known, when the private plans were re-read against the pre-registered rule (Section 3.1). The run_027 label has no recorded reason. Without D, K and O (13 runs), V4 flagged 4 of 4 collusion runs and 4 of 9 others; this is descriptive and was not pre-registered. The labeller read private plans that name the pact, so the labels are not independent of the planted instruction. The class instructions were tuned on practice runs. Appendix A.2 holds the full list.
 
 ## References
 
-[CHECK: Titles below were read from the arXiv abstract pages by a checker, not by the author. Confirm each title and add the full author list. Do not keep an entry that the report does not cite.]
-
-- Agrawal et al. (2025). Evaluating LLM Agent Collusion in Double Auctions. arXiv:2507.01413. [CHECK: authors]
+- Agrawal, K., Teo, V., Vazquez, J. J., Kunnavakkam, S., Srikanth, V., & Liu, A. (2025). Evaluating LLM Agent Collusion in Double Auctions. arXiv:2507.01413.
 - Apart Research (2026). AI Collusion Research Sprint, 23–25 October 2026. https://apartresearch.com/sprints/ai-collusion-research-sprint-2026-10-23-to-2026-10-25
-- Arike et al. (2026). arXiv:2601.21112 (monitor information access and sabotage detection). [CHECK: full title, authors]
-- Berger et al. (2025). "Coordination code: rethinking antitrust liability in the age of AI pricing". American Bar Association, Antitrust Magazine, fall 2025. https://www.americanbar.org/groups/antitrust_law/resources/magazine/2025-fall/coordination-code-rethinking-antitrust-liability-age-ai-pricing/ [CHECK: not verified; the page could not be fetched. Confirm title, authors and date, or remove.]
-- Fish et al. (2024). Algorithmic Collusion by Large Language Models. arXiv:2404.00806. [CHECK: authors]
-- Lin et al. (2024). Strategic Collusion of LLM Agents: Market Division in Multi-Commodity Competitions. arXiv:2410.00031. [CHECK: authors]
-- Nakamura et al. (2026). Colosseum: Auditing Collusion in Cooperative Multi-Agent Systems. arXiv:2602.15198. [CHECK: authors]
-- Nguyen et al. (2026). TraceGuard: Structured Multi-Dimensional Monitoring as a Collusion-Resistant Control Protocol. arXiv:2604.03968. [CHECK: authors]
-- Shi et al. (2026). When Agents Lie: Premeditation, Persistence, and Exploitation in Repeated Games. arXiv:2607.05132. Code: https://github.com/Jerick-1380/LLM-Trust-Breaking, commit fd11aca351e52c65c929e1a7d46d9f087f237adf. [CHECK: authors, venue]
+- Arike, R., Moreno, R. M., Subramani, R., Biswas, S., & Ward, F. R. (2026). How does information access affect LLM monitors' ability to detect sabotage? arXiv:2601.21112.
+- Fish, S., Gonczarowski, Y. A., & Shorrer, R. I. (2024). Algorithmic Collusion by Large Language Models. arXiv:2404.00806.
+- Lin, R. Y., Ojha, S., Cai, K., & Chen, M. F. (2024). Strategic Collusion of LLM Agents: Market Division in Multi-Commodity Competitions. arXiv:2410.00031.
+- Nakamura, M., Kumar, A., Das, S., Abdelnabi, S., Mahmud, S., Fioretto, F., Zilberstein, S., & Bagdasarian, E. (2026). Colosseum: Auditing Collusion in Cooperative Multi-Agent Systems. arXiv:2602.15198.
+- Nguyen, K. L., Nghiem, H., & Tran, T. (2026). TraceGuard: Structured Multi-Dimensional Monitoring as a Collusion-Resistant Control Protocol. arXiv:2604.03968.
+- Shi, J., Zhang, T. J., Schölkopf, B., Conitzer, V., & Jin, Z. (2026). When Agents Lie: Premeditation, Persistence, and Exploitation in Repeated Games. arXiv:2607.05132. Code: https://github.com/Jerick-1380/LLM-Trust-Breaking, commit fd11aca351e52c65c929e1a7d46d9f087f237adf.
+- Weiner, M. L., Berger, L., & Jiang, W. (2025). Coordination by Code: Rethinking Antitrust Liability in the Age of AI Pricing. ABA Antitrust Magazine, 40(1), Fall 2025.
 
 ## Appendix A. Limitations and Dual-Use / Ethical Considerations
 
 ### A.1 What the result does and does not establish
 **It establishes (for these 16 runs only):**
 - One frozen referee prompt, with `deepseek-v4-pro`, flagged the planted pair in 6 of 6 runs on the ledger view (95% CI 54.1–100%).
-- We found no evidence of detection from messages alone or from actions alone in 16 runs (one-sided 95% upper bound on recall 34.8%; on false-positive rate 28.3%).
-- On the combined views, the referee also flagged 5 or 6 of the 9 runs the author labelled not collusion, including both talk-only runs.
+- We found no evidence of detection from messages alone or from actions alone in 16 runs (one-sided 95% upper bound on recall 39.3%; on false-positive rate 25.9%).
+- On the combined views, the referee also flagged 5 to 7 of the 10 runs the author labelled not collusion, including both talk-only runs.
 
 **It does not establish:**
 - Any claim about monitors in general, or about any real deployment.
@@ -187,20 +182,20 @@ All results are about these 16 runs. The collusion is planted by instruction, so
 
 ### A.2 Full list of limits
 1. **The collusion is planted by instruction.** The pair's agreement, the cheap deal and the keepers' promise are all given in the prompts. The game's incentives create none of them. The result says whether a referee can see planted collusion. It does not say whether these agents collude on their own.
-2. **Small pilot.** 16 runs: 7 collusion, 9 not. One run moves recall by about 14 points and the false-positive rate by about 11 points. The decoy classes hold 1 to 5 runs each. The tests are underpowered and the intervals are wide (for example 42.1–99.6% for recall on V4). The sprint guidance for a pilot is 20 to 40 runs; we are below it.
+2. **Small pilot.** 16 runs: 6 collusion, 10 not. One run moves recall by about 17 points and the false-positive rate by 10 points. The decoy classes hold 1 to 5 runs each. The tests are underpowered and the intervals are wide (for example 54.1–100% for recall on V4). The sprint guidance for a pilot is 20 to 40 runs; we are below it.
 3. **One game, one agent model, one sample per run.** We used Diners only. The harness passes no seed, so each run is one sample with no repeats, and we have no variance estimate.
 4. **Same vendor for agents and referee.** The agents (`deepseek-flash`) and the referee (`deepseek-v4-pro`) both come from DeepSeek. They are different models, but shared habits are possible. The optional second-referee check was not done.
-5. **The referee flags many runs the author labelled not collusion.** The false-positive rate is 5/9 = 56% on V3 and V4 and 6/9 = 67% on V5. Those 9 runs include 4 independent cheats and 2 talk-only runs in which other agents lied, so they are not all plainly innocent. We did not tune the prompt or the threshold, as planned.
+5. **The referee flags many runs the author labelled not collusion.** The false-positive rate is 5/10 = 50% on V3 and V4 and 7/10 = 70% on V5. Those 10 runs include 5 independent cheats and 2 talk-only runs in which other agents lied, so they are not all plainly innocent. We did not tune the prompt or the threshold, as planned.
 6. **One labeller, no second rater.** The author, who also wrote the study plan, labelled all 16 runs. There is no agreement figure. The labelling was blind to run id and class name, from shuffled letters.
 7. **Hints in the labelling questions.** For runs D, K and O (letters in the blind pack), the person who ran the labelling session put a small hint in the question text. For D the text said that no partner or pact was named in the plan lines shown. For K it quoted the pact lines, and the author first answered "unclear". For O the text pointed out that the sheet quotes M and Q naming a pact; the author had first labelled it not collusion and changed it to collusion after the hint. Run I was skipped at first and labelled in a second pass. Most labels have no recorded reason.
-8. **Sensitivity without D, K and O (descriptive, not pre-registered).** With these three runs removed (13 runs: 5 collusion, 8 not): V3 flagged 4/5 collusion runs and 4/8 others; V4 4/5 and 4/8; V5 5/5 and 6/8; V1 and V2 0/5 and 0/8; R0 5/5 and 7/8. [CHECK: recomputed by a checker, not part of `score_scored.txt`.]
-9. **Labels without a reason.** The labels for run_025 (collusion, intended independent cheats) and run_027 (not collusion, independent cheats) have no recorded reason. M and Q stated cheap and ordered expensive in all 5 rounds in both runs (counted from the run logs). The V4 error count (2) and the sensitivity counts in item 8 depend on this pair; if either label changed, V4 would have one error. [CHECK: author to record the reason for the run_025 and run_027 labels after re-reading the two logs.]
+8. **Sensitivity without D, K and O (descriptive, not pre-registered).** With these three runs removed (13 runs: 4 collusion, 9 not): V3 flagged 4/4 collusion runs and 4/9 others; V4 4/4 and 4/9; V5 4/4 and 7/9; V1 and V2 0/4 and 0/9; R0 4/4 and 8/9. These counts come from a script that reruns the scoring functions on the 13 runs; they are not part of `score_scored.txt`.
+9. **Relabel of run_025 and a label without a reason.** The blind label for run_025 (intended class independent cheats) was collusion. On 25 October, after the scores and an outside review, the private plans of M and Q were re-read against the pre-registered rule, and the author changed the label to not collusion: "Private plans in all five rounds are individual dominant-strategy reasoning; no plan names a partner or a shared plan, so the agreement clause of the label rule fails. Payoff advantage alone is not collusion." Before the change the base was 7 collusion and 9 not, V4 recall was 6/7 and its false-positive rate 5/9 (56%). The relabel was made after the scores were known and moves the base, the V4 error count and the sensitivity counts in item 8. The label for run_027 (not collusion, independent cheats) has no recorded reason; M and Q stated cheap and ordered expensive in all 5 rounds in both runs (counted from the run logs). [CHECK: author to record the reason for the run_027 label after re-reading its log.]
 10. **Labels are not independent of the planted instruction.** The author judged from private plans. In the planted pair the plan stage holds a sentence that names the pact and the partner. So "blind to class" holds for the class name only; the plan text can carry the class signal.
 11. **Practice tuning.** We adjusted the class instructions on practice runs until the agents behaved as the classes need (Section 2.3). The referee prompt was checked for output format only. The scored batch was generated once.
-12. **Class is the intended class.** We did not code which class each run showed. Per-class rows use the hand label, and one independent-cheats run (run_025) was labelled collusion.
+12. **Class is the intended class.** We did not code which class each run showed. Per-class rows use the hand label, which after the relabel of run_025 (item 9) equals the intended class for all 16 runs.
 13. **Thin evidence check.** A blind scout coded the 20 M and Q messages of two practice runs (run_007, run_008) as "none", and one independent second coding found the same under a strict reading (Section 2.6). Under the loosest reading, one message in run_007 and three in run_008 name the other cheater. That is the only agreement figure. The check was not run on the scored runs.
 14. **Possible style tells.** The planted pair and the independent cheats received instructions that differ by one sentence. A residual difference in wording that is not about agreement cannot be ruled out.
-15. **Agent temperature unconfirmed.** The sampling temperature of the agents is not confirmed [CHECK].
+15. **Agent temperature.** Agent sampling temperature 1.0 (wrapper default; no temperature is set in the agent request builder).
 16. **Agents have message history but no private reflection.** The judge and reflection steps of the harness were skipped.
 17. **Harness licence.** The harness has no stated licence. We use it unchanged at a pinned commit and do not redistribute it [CHECK: the author planned to contact the authors].
 
@@ -208,7 +203,7 @@ All results are about these 16 runs. The collusion is planted by instruction, so
 - **Defensive purpose.** The work builds a test for a monitor (a referee). Its goal is to help people who need to detect collusion between AI agents.
 - **Planted instructions.** The collusion instructions are a few plain sentences of role-play in a dinner game with fictional payoffs. They give no capability that is useful outside the game. We publish the class texts so that others can repeat the study.
 - **Blind spots.** A published referee prompt can be studied for blind spots. Our results show some: in these 16 runs the referee flagged runs with lying whether or not it saw marks, and we found no evidence of detection from messages alone or from actions alone. A group of agents could use such findings to learn that matching words and actions, or avoiding public cues, may reduce flags. We think the benefit of open results (others can repeat the test and find the limits) outweighs this risk for a toy game. [CHECK: the author decides whether to keep this reasoning.]
-- **False accusations.** A referee that flags 56–67% of the runs labelled not collusion would cause harm if used in practice (for example, if agents or their operators were penalised). This setup is not ready for any use of that kind.
+- **False accusations.** A referee that flags 50–70% of the runs labelled not collusion would cause harm if used in practice (for example, if agents or their operators were penalised). This setup is not ready for any use of that kind.
 - **No people.** The data holds only text from language-model agents in a fictional game. There are no human subjects and no personal data.
 - **Secrets.** The API key lives in a local `.env` file that is not in the repository. No key appears in any log, file or commit. [CHECK: run a final search of the repo for key strings before publishing.]
 - **Reuse of preexisting code.** The harness is by Shi et al. We did not change it. It has no stated licence, so we do not copy it into our repo.
@@ -229,7 +224,7 @@ Expensive dish: joy 10, price 8. Cheap dish: joy 5, price 2. Payoff is joy minus
 | 5 | 2.0 | – |
 
 ### B.2 Calls and tokens
-One game makes 75 calls (5 agents, 3 stages, 5 rounds). The wrapper skips the harness judge and reflection calls and asks again once when a reply has no action field. The 16 scored games made 1,201 calls in total, with 1,751,291 prompt tokens and 800,118 completion tokens. The one call above 1,200 was a length retry in run_028: the reasoning model's reply was empty and cut by length, so the wrapper asked again with twice the token limit. We ask for at least 8000 tokens per agent reply. The referee made 80 calls with 191,531 prompt tokens and 4,704 completion tokens; all 80 finished with reason "stop". [CHECK: cost in money is not computed.]
+One game makes 75 calls (5 agents, 3 stages, 5 rounds). The wrapper skips the harness judge and reflection calls and asks again once when a reply has no action field. The 16 scored games made 1,201 calls in total, with 1,751,291 prompt tokens and 800,118 completion tokens. The one call above 1,200 was a length retry in run_028: the reasoning model's reply was empty and cut by length, so the wrapper asked again with twice the token limit. We ask for at least 8000 tokens per agent reply. The referee made 80 calls with 191,531 prompt tokens and 4,704 completion tokens; all 80 finished with reason "stop". The cost in money was not computed.
 
 ### B.3 Preexisting code and what is new
 `vendor/LLM-Trust-Breaking/` is preexisting code by Shi et al. Source: https://github.com/Jerick-1380/LLM-Trust-Breaking, commit `fd11aca351e52c65c929e1a7d46d9f087f237adf`. It has no stated licence. We did not change it, and it is not committed to our repo. The repo scaffold, the first wrapper and one early example log (`run_001`) were made on 22 and 23 October, before the sprint start, and are also preexisting. New work from the sprint: the class instructions, the wrapper changes (DeepSeek routing, retries, time limits), the views and leak check, the referee prompt, client and runner, the baselines, the scoring, the label pack, the practice and scored runs, the labels and the results (`swarm_referee/`, `tests/`, `data/`).
