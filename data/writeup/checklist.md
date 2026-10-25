@@ -21,26 +21,23 @@ Final edit round, 2026-10-25. Nothing is pushed or published. The lead claim for
 1. Lead claim: outcome 1 (evidence check coded the M/Q messages "none"). Outcome 3 (V4 made 2 errors) is a secondary reading in Section 3.6 and is explained in Section 4. Outcome 4 (mixed) can also be argued.
 2. Whether to code the scored M/Q messages for cues (not done). This would show whether agreement cues were present.
 3. Whether to keep the dual-use reasoning in A.3.
+4. Author to record the reason for the run_025 and run_027 labels (re-read the two logs). The V4 two-error reading and the sensitivity table depend on these two labels. No label was changed.
 
 ## C. Other known gaps (not marked in the text)
 - `CLAUDE.md` section 1 still says the referee prompt "is empty until the captain writes it". This is out of date.
 - No diagnostics (coalition advantage, joint regret) were run on the scored logs. The report makes no claim about payoffs or agent behaviour beyond the labels and flags.
-- The referee `reason` fields and the scored transcripts were not read for this draft; statements about why the referee flagged a run are marked [CHECK].
-- Closed in this round: class-text freeze date and commit (2026-10-23 18:15 UTC, `0a86a3c`); talk-only M/Q orders (never expensive in run_018 and run_023); the word "captain" removed from the report text.
+- The referee `reason` fields in `data/verdicts.csv` were read in this round, and the stated-cheap/ordered-expensive counts per agent were taken from the scored logs by script. No other scored transcript was read. The review's "10 of 10" for run_018 was checked: the log shows 9 agent-rounds (J 4, T 3, Z 2).
+- Closed in this round: the harm-condition sentence (replaced by what the reasons show); the evidence-check coder details (second coding in the review session; Section 2.6); the log count for run_025 and run_027; the liar-round counts in Section 4; the next-steps sentence; the outcome-4 note (kept here in B.1 only).
 
-## D. Every [CHECK] item (30)
+## D. Every [CHECK] item (25)
 - `00_title_abstract.md` line 1: exact title; it must be the same on any resubmission
 - `00_title_abstract.md` line 3: author name(s)
 - `00_title_abstract.md` line 3: affiliation(s)
 - `01_introduction.md` line 3: confirm the wording against the paper
 - `01_introduction.md` line 17: the author should read each paper and correct these one-line summaries; they come from the sprint page, not from a full reading.
 - `02_method.md` line 8: sampling temperature of the agents is unconfirmed; the wrapper falls back to 1.0 when a request carries none
-- `02_method.md` line 47: which two practice runs; the second coder; the agreement rate; the author's own blind coding
-- `03_results.md` line 59: outcome 4 (mixed) can also be argued
-- `04_discussion.md` line 3: confirm against the `reason` fields in `data/verdicts.csv`; we did not read them for this draft
-- `04_discussion.md` line 7: confirm; the figures were 12 to 18 liar-rounds for pairs and 14 to 17 for independents
-- `04_discussion.md` line 7: from `data/verdicts.csv`
-- `04_discussion.md` line 11: the author may add next steps: a second rater; repeated samples per class; a referee from another vendor; a prompt that tests "at the cost of agents outside the plan"; pair instructions that allow public signals, with the evidence check run again on the scored messages.
+- `03_results.md` line 60: author to record the reason for the run_025 and run_027 labels after re-reading the two logs
+- `04_discussion.md` line 11: author to record the reason for the run_025 and run_027 labels after re-reading the two logs
 - `06_references.md` line 3: Titles below were read from the arXiv abstract pages by a checker, not by the author. Confirm each title and add the full author list. Do not keep an entry that the report does not cite.
 - `06_references.md` line 5: authors
 - `06_references.md` line 7: full title, authors
@@ -51,8 +48,7 @@ Final edit round, 2026-10-25. Nothing is pushed or published. The lead claim for
 - `06_references.md` line 12: authors
 - `06_references.md` line 13: authors, venue
 - `07_appendix_limitations_dual_use.md` line 24: recomputed by a checker, not part of `score_scored.txt`.
-- `07_appendix_limitations_dual_use.md` line 25: from the checker's log count
-- `07_appendix_limitations_dual_use.md` line 29: details, second coder, agreement
+- `07_appendix_limitations_dual_use.md` line 25: author to record the reason for the run_025 and run_027 labels after re-reading the two logs.
 - `07_appendix_limitations_dual_use.md` line 31: (no detail)
 - `07_appendix_limitations_dual_use.md` line 33: the author planned to contact the authors
 - `07_appendix_limitations_dual_use.md` line 38: the author decides whether to keep this reasoning.
