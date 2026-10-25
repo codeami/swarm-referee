@@ -9,7 +9,7 @@
 **It does not establish:**
 - Any claim about monitors in general, or about any real deployment.
 - That the agents collude by themselves. We planted all collusion by instruction.
-- That a referee can tell an agreed pair from independent cheats. Our evidence gate failed, so we make no claim.
+- That a referee can tell an agreed pair from independent cheats. On the lead view it made 2 errors, and we read this as detecting lying, not agreement. The earlier blind check of the pair's messages coded them "none", so we do not know that agreement cues were present.
 - Any rate with narrow bounds. All intervals are wide.
 - Any result about other games, other models, other vendors, other prompts or other seeds.
 
@@ -23,7 +23,7 @@
 7. **Hints in the labelling questions.** For runs D, K and O (letters in the blind pack), the person who ran the labelling session put a small hint in the question text. For D the text said that no partner or pact was named in the plan lines shown. For K it quoted the pact lines, and the author first answered "unclear". For O the text pointed out that the sheet quotes M and Q naming a pact; the author had first labelled it not collusion and changed it to collusion after the hint. Run I was skipped at first and labelled in a second pass. Most labels have no recorded reason. These labels may be biased towards the hint [CHECK: the author may want to report the scores with D, K and O removed; we did not compute this].
 8. **Practice tuning.** We adjusted the class instructions on practice runs until the agents behaved as the classes need (Section 2.3). The referee prompt was checked for output format only. The scored batch was generated once.
 9. **Intended class is not the landed class.** Per-class numbers use the intended class. We did not code the landed class independently. One independent-cheats run (run_025) was labelled collusion.
-10. **The evidence gate had thin support.** One blind scout coded the pair and independents messages from practice runs as "none". The gate was run on practice runs, not on the scored runs [CHECK: details, second coder, agreement].
+10. **The outcome 3 wording conflicts with the evidence check.** One blind scout coded the M and Q messages of one pair run and one independent-cheats run from practice runs as "none". The outcome 3 sentence says that agreement cues were present in public messages. The check does not support that. We chose outcome 3 from the 2 errors on V4 and state the other reading (outcome 1) in Sections 3.6 and 4. We did not code the scored messages [CHECK: details, second coder, agreement].
 11. **Possible style tells.** The planted pair and the independent cheats received instructions that differ by one sentence. A residual difference in wording that is not about agreement cannot be ruled out.
 12. **Agents have message history but no private reflection.** The judge and reflection steps of the harness were skipped.
 13. **Harness licence.** The harness has no stated licence. We use it unchanged at a pinned commit and do not redistribute it [CHECK: the author planned to contact the authors].

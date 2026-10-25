@@ -1,11 +1,11 @@
 # Submission checklist and open items
 
-Draft written 2026-10-25 from commit d36d3a9 (scoring) on branch `fm/sprint1-practice-runs`. Nothing is pushed or published.
+Draft revised 2026-10-25 (author chose outcome 3) from commit d36d3a9 (scoring) on branch `fm/sprint1-practice-runs`. Nothing is pushed or published.
 
 ## A. Submission checklist (Apart guidelines)
 - [ ] Report is a PDF in the official template: https://docs.google.com/document/d/1Y5wd3VRbXU5N08BvAGiJUQTaWbMCSPjhzXsR-ozuehg/copy?usp=sharing (copy the markdown into it).
-- [ ] Main body is 8 pages or fewer, not counting references and appendices. The markdown body (Sections 1–5) has about 4167 words with tables. Check the page count in the template; cut Section 2.1 text or the Section 3.4 table if it is over.
-- [ ] Abstract is 150 to 250 words. Draft count: 224 words.
+- [ ] Main body is 8 pages or fewer, not counting references and appendices. The markdown body (Sections 1–5) has about 4379 words with tables. Check the page count in the template; cut Section 2.1 text or the Section 3.4 table if it is over.
+- [ ] Abstract is 150 to 250 words. Draft count: 247 words.
 - [ ] Project title is final and exact. It must be identical on any resubmission. Draft title is in `00_title_abstract.md`.
 - [ ] Authors and affiliations filled in.
 - [ ] Appendix "Limitations and Dual-Use / Ethical Considerations" is present (`07_appendix_limitations_dual_use.md`).
@@ -19,14 +19,15 @@ Draft written 2026-10-25 from commit d36d3a9 (scoring) on branch `fm/sprint1-pra
 - [ ] Submit before Sunday 25 October 23:59 AoE (Monday 26 October 17:29 IST). A resubmission with the exact same title replaces the files.
 
 ## B. Choices for the author
-1. Primary claim for pair versus independent cheats: draft uses outcome 1 (gate failed). Outcome 3 (referee made 2 errors on V4) is in one secondary paragraph in Section 3.6. You may switch; outcome 4 (mixed) can also be argued.
-2. Whether to report scores without D, K and O (not computed).
-3. Whether to keep the dual-use reasoning in A.3.
+1. Primary claim for pair versus independent cheats: the author chose pre-registered outcome 3 (V4 made 2 errors). The draft leads with it. The earlier blind evidence check coded the M/Q messages "none"; this is stated as a caveat in Section 3.6, Section 4 (discussion), Section 5 and Appendix A.2 item 10. The outcome 1 sentence is quoted in Section 3.6 so a reader can see the other reading. Outcome 4 (mixed) can also be argued.
+2. Whether to code the scored M/Q messages for cues (not done). This would settle whether "agreement cues were present".
+3. Whether to report scores without D, K and O (not computed).
+4. Whether to keep the dual-use reasoning in A.3.
 
 ## C. Other known gaps (not marked in the text)
-- `CLAUDE.md` section 1 still says the referee prompt "is empty until the captain writes it". This is out of date (the prompt is written and frozen).
+- `CLAUDE.md` section 1 still says the referee prompt "is empty until the captain writes it". This is out of date.
 - No diagnostics (coalition advantage, joint regret) were run on the scored logs. The report makes no claim about payoffs or agent behaviour beyond the labels and flags.
-- I did not read the `reason` fields of the referee verdicts or the scored transcripts for this draft. Statements about why the referee flagged a run are marked [CHECK].
+- I did not read the `reason` fields of the referee verdicts or the scored transcripts. Statements about why the referee flagged a run are marked [CHECK].
 
 ## D. Every [CHECK] item (35)
 - `00_title_abstract.md` line 1: exact title; it must be the same on any resubmission
@@ -44,9 +45,9 @@ Draft written 2026-10-25 from commit d36d3a9 (scoring) on branch `fm/sprint1-pra
 - `03_results.md` line 3: we did not check the landed class independently; the labels agree with the intended class in 15 of 16 runs, see Section 3.1
 - `03_results.md` line 6: ask the author whether the plans showed a shared plan
 - `03_results.md` line 40: the author has read these two runs; confirm that M and Q did so
-- `03_results.md` line 63: the author decides which reading is primary; outcome 4 (mixed) can also be argued because one error comes from a label that differs from the intended class
+- `03_results.md` line 63: the author may want to code them
+- `03_results.md` line 65: outcome 4 (mixed) can also be argued
 - `04_discussion.md` line 3: confirm this reading against the `reason` fields in `data/verdicts.csv`; we did not read them for this draft
-- `04_discussion.md` line 5: consistent with the blind scout coding "none"
 - `04_discussion.md` line 11: the author may add or remove next steps.
 - `06_references.md` line 3: These entries hold only what the sprint page and the talk notes state: first author, year, arXiv number or link. I did not add titles from memory, because a made-up reference can disqualify the project. Look up each paper, add the full title and author list, and delete any entry the report does not cite.
 - `06_references.md` line 5: title, authors
