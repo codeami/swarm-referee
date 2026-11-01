@@ -14,6 +14,8 @@ The test question: can a single fixed-prompt referee find collusion in game logs
 - The referee (prompt `swarm_referee/prompts/referee_v1.md`, model `deepseek-v4-pro`, thinking off, temperature 0) was frozen on 2026-10-24, see `data/referee_freeze_DRAFT.md`.
 - The 16 scored runs, the referee verdicts, the hand labels (`data/labels.csv`) and the scores (`data/score_scored.txt`) are done. The draft report is in `data/writeup/`.
 
+Planning documents (roadmap, pending work, tech debt, how the sprint was planned): `docs/planning/`.
+
 ## How to run
 Run all commands from the repo root.
 1. Create a virtualenv and install the harness dependencies:
