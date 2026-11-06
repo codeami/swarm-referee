@@ -5,12 +5,12 @@
 - Harness: vendor/LLM-Trust-Breaking (commit fd11aca). Do not edit it.
 - Models: the agents use `deepseek-flash` through the DeepSeek API (captain decision 2026-10-23: the free minimax model was removed and the OpenRouter credit ran out). If the API says model not found, use `deepseek-v4-flash`. The key is `DEEPSEEK_API_KEY` in `.env`. The referee and the second coder use other models. No other paid model.
 - Never create, read, print, log or copy an API key. Keys live in `.env` only.
-- Prompt file `swarm_referee/prompts/referee_v1.md` is frozen after the practice runs. It is empty until the captain writes it.
+- Prompt file `swarm_referee/prompts/referee_v1.md` is frozen after the practice runs. It was frozen on 2026-10-24 (see `data/referee_freeze_DRAFT.md`).
 - Write names and technical text in ASD-STE100.
 
 ## 2. Run commands (Diners)
 Run all commands from the repo root. Use `.venv/bin/python`.
-The plan of record is `STRATEGY.md` (rev 3). `PROJECT.md` is the working document. If they differ, `STRATEGY.md` is right.
+`STRATEGY.md` and `PROJECT.md` are not in this repo. The planning documents are in `docs/planning/`.
 ```
 .venv/bin/python -m swarm_referee.run_batch deepseek-flash --set practice --dry-run
 .venv/bin/python -m swarm_referee.run_batch deepseek-flash --set practice
